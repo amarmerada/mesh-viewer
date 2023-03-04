@@ -10,9 +10,10 @@ using namespace glm;
 using namespace agl;
 
 int main() {
-   PLYMesh mesh("../models/triangle.ply");
+    PLYMesh mesh("../models/triangle.ply");
 
    // print vertices, normals, colors, etc
+   printf("Here\n");
    std::cout << "This mesh has " << mesh.numVertices() << " vertices" << std::endl;
    std::cout << "Max bounds: " << mesh.maxBounds() << std::endl; 
    std::cout << "Min bounds: " << mesh.minBounds() << std::endl; 
