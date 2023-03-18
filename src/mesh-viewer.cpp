@@ -1,6 +1,6 @@
 //--------------------------------------------------
-// Author:
-// Date:
+// Author: Abbi Marmer-Adams
+// Date: 3/18/23
 // Description: Loads PLY files in ASCII format
 //--------------------------------------------------
 
@@ -31,16 +31,28 @@ public:
         renderer.loadShader("normals", "../shaders/normals.vs", "../shaders/normals.fs");
         renderer.loadShader("phong-vertex", "../shaders/phong-vertex.vs", "../shaders/phong-vertex.fs");
         renderer.loadShader("phong-pixel", "../shaders/phong-pixel.vs", "../shaders/phong-pixel.fs");
-        
     }
 
     void mouseMotion(int x, int y, int dx, int dy) {
         if (click) {
-            ele = ele + dy * 0.1;
-            az = az - dx * 0.1;
-            float x = radius * sin(az) * cos(ele);
-            float y = radius * sin(ele);
-            float z = radius * cos(az) * cos(ele);
+            ele = ele - (dy * 0.05);
+            if (ele > 6.283) {
+                ele = 0;
+            }
+            if (ele < 0) {
+                ele = 6.283;
+            }
+            az = az - (dx * 0.05);
+            if (az < -3.1415) {
+                az = 3.1415;
+            }
+            if (az > 3.1415) {
+                az = -3.1415;
+            }
+            
+            float x = radius * cos(az) * sin(ele);
+            float y = radius * cos(ele);
+            float z = radius * sin(az) * sin(ele);
             eyePos = vec3(x, y, z);
         }
     }
@@ -54,16 +66,17 @@ public:
     }
 
     void scroll(float dx, float dy) {
-        radius = radius + dy;
-        float x = radius* sin(az) * cos(ele);
-        float y = radius*sin(ele);
-        float z = radius* cos(az) * cos(ele);
+        radius = radius + dx + dy;
+        float x = radius * cos(az) * sin(ele);
+        float y = radius* cos(ele);
+        float z = radius* sin(az) * sin(ele);
         eyePos = vec3(x, y, z);
     }
 
     void keyUp(int key, int mods) {
         if (key == GLFW_KEY_N) {
             models = (models + 1) % meshList.size();
+            std::cout << files[models] << std::endl;
         }
         else if(key == GLFW_KEY_P){
             if (models != 0) {
@@ -72,6 +85,7 @@ public:
             else {
                 models = meshList.size() - 1;
             }
+            std::cout << files[models] << std::endl;
         }
         else if(key == GLFW_KEY_S){
             if (shaders == shadernames.size()-1) {
@@ -84,7 +98,6 @@ public:
     }
 
     void draw() {
-        std::cout << files[models] << std::endl;
         mesh = meshList[models];
         float aspect = ((float)width()) / height();
         renderer.perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
@@ -111,16 +124,11 @@ public:
             a = 5.0f / yrange;
             b = 5.0f / yrange;
             c = 5.0f / yrange;
-
         }
         renderer.scale(vec3(a, b, c));
-
-        //renderer.scale(vec3(sin(elapsedTime())*10, cos(elapsedTime())*10, -cos(elapsedTime()*10)));
         renderer.translate(vec3(0, 0, 0));
         renderer.lookAt(eyePos,lookPos, up);
-
         renderer.mesh(mesh);
-        //renderer.cube(); // for debugging!
     }
 
 protected:

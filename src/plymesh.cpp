@@ -1,6 +1,6 @@
 //-----------------------------------------------------------
-// Author: Abigail Marmer-Adans
-// Date: 3/2/2023
+// Author: Abigail Marmer-Adams
+// Date: 3/18/2023
 // Description: Loads PLY files in ASCII format
 //--------------------------------------------------
 
