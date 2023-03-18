@@ -136,7 +136,9 @@ void Shader::compileSource(const string &source, GLSLShader::Type type) {
   // Check for errors
   int result;
   glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &result);
+  printf("here shader.cpp\n");
   if (GL_FALSE == result) {
+      printf("result : %d", result);
     // Compile failed, get log
     int length = 0;
     string logString;

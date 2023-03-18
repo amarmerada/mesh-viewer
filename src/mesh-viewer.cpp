@@ -28,6 +28,10 @@ public:
             meshList.push_back(eachFile);
         }
         mesh = meshList[0];
+        renderer.loadShader("normals", "../shaders/normals.vs", "../shaders/normals.fs");
+        renderer.loadShader("phong-vertex", "../shaders/phong-vertex.vs", "../shaders/phong-vertex.fs");
+        renderer.loadShader("phong-pixel", "../shaders/phong-pixel.vs", "../shaders/phong-pixel.fs");
+        
     }
 
     void mouseMotion(int x, int y, int dx, int dy) {
@@ -61,12 +65,20 @@ public:
         if (key == GLFW_KEY_N) {
             models = (models + 1) % meshList.size();
         }
-        else if(key == GLFW_KEY_M){
+        else if(key == GLFW_KEY_P){
             if (models != 0) {
                 models = models - 1;
             }
             else {
                 models = meshList.size() - 1;
+            }
+        }
+        else if(key == GLFW_KEY_S){
+            if (shaders == shadernames.size()-1) {
+                shaders = 0;
+            }
+            else {
+                shaders++;
             }
         }
     }
@@ -77,24 +89,8 @@ public:
         float aspect = ((float)width()) / height();
         renderer.perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
         renderer.lookAt(eyePos, lookPos, up);
-
-        //renderer.rotate(vec3(sin(elapsedTime()), 0, 0));
-
+        renderer.beginShader(shadernames[shaders]);
         
-        //if (xrange > 5) {
-        //    a =  5.0 / xrange;
-        //}
-        //if (yrange > 5) {
-        //    b = 5.0 / yrange;
-        //}
-        //if (zrange > 5) {
-        //    c = 5.0 / zrange ;
-        //}
-        //renderer.scale(vec3(a, b, c));
-
-
-
-        //renderer.rotate(vec3(0, sin(elapsedTime()), 0));
         float a = 1;
         float b = 1;
         float c = 1; 
@@ -128,7 +124,9 @@ public:
     }
 
 protected:
-    std::vector<string> files = GetFilenamesInDir("../models", "ply");
+    std::vector<string> files;
+    std::vector<string> shadernames = {"normals", "phong-pixel", "phong-vertex"}; 
+    int shaders = 0;
     PLYMesh mesh;
     std::vector<PLYMesh> meshList;
     vec3 eyePos = vec3(10, 0, 0);
