@@ -55,6 +55,7 @@ namespace agl {
       std::vector<GLfloat> _positions;
       std::vector<GLfloat> _normals;
       std::vector<GLuint> _faces;
+      std::vector<GLfloat> _texCoords;
 
       glm::vec3 maxB;
       glm::vec3 minB;

@@ -31,6 +31,8 @@ public:
         renderer.loadShader("normals", "../shaders/normals.vs", "../shaders/normals.fs");
         renderer.loadShader("phong-vertex", "../shaders/phong-vertex.vs", "../shaders/phong-vertex.fs");
         renderer.loadShader("phong-pixel", "../shaders/phong-pixel.vs", "../shaders/phong-pixel.fs");
+        renderer.loadShader("toon", "../shaders/toon.vs", "../shaders/toon.fs");
+        renderer.loadShader("fog", "../shaders/fog.vs", "../shaders/fog.fs");
     }
 
     void mouseMotion(int x, int y, int dx, int dy) {
@@ -100,9 +102,30 @@ public:
     void draw() {
         mesh = meshList[models];
         float aspect = ((float)width()) / height();
+
         renderer.perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
         renderer.lookAt(eyePos, lookPos, up);
         renderer.beginShader(shadernames[shaders]);
+        renderer.setUniform("matCol.ka", vec3(0.1f));
+        renderer.setUniform("matCol.kd", vec3(1.0f));
+        renderer.setUniform("matCol.ks", vec3(0.6f));
+        renderer.setUniform("matCol.shine", 44.4f);
+        renderer.setUniform("lightCol.la", vec3(0.5f, 0.0f, 0.5f));
+        renderer.setUniform("lightCol.ld", vec3(0.5f, 0.0f, 0.5f));
+        renderer.setUniform("lightCol.ls", vec3(0.5f, 0.0f, 0.5f));
+        renderer.setUniform("Light.position", vec4(0.5, 0.5, 0.5, 1.0));
+        renderer.setUniform("Light.intensity", vec3(0.75, 0.75, 0.75));
+        renderer.setUniform("maxDist", 10);
+        renderer.setUniform("minDist", 100);
+        renderer.setUniform("color", vec3(.95, 0.3, 0.85));
+        renderer.setUniform("Kd", vec3(0.6, 0.7, 0.65));
+        renderer.setUniform("Ks", vec3(0.9, 0.85, 0.95));
+        renderer.setUniform("Ka", vec3(0.35, 0.25, 0.3));
+        renderer.setUniform("Shininess", 46.0f);
+        //renderer.setUniform("l2.la", vec3(0.2f, 0.4f, 0.8f));
+        //renderer.setUniform("l2.ld", vec3(0.2f, 0.4f, 0.8f));
+        //renderer.setUniform("l2.ls", vec3(0.2f, 0.4f, 0.8f));
+        //renderer.setUniform("l2.pos", vec4(0.5f, 0.5f, 0.5f, 1.0f));
         
         float a = 1;
         float b = 1;
@@ -133,7 +156,7 @@ public:
 
 protected:
     std::vector<string> files;
-    std::vector<string> shadernames = {"normals", "phong-pixel", "phong-vertex"}; 
+    std::vector<string> shadernames = {"normals", "phong-pixel", "phong-vertex", "toon", "fog"};
     int shaders = 0;
     PLYMesh mesh;
     std::vector<PLYMesh> meshList;

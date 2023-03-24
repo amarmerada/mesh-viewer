@@ -1,5 +1,22 @@
 #version 400
 
+struct light{
+   vec4 pos;
+   vec3 la;
+   vec3 ld;
+   vec3 ls;
+};
+
+struct material{
+   vec3 ka;
+   vec3 kd;
+   vec3 ks;
+   float shine;
+};
+
+uniform light lightCol;
+uniform material matCol;
+
 in vec4 eyePosit;
 in vec3 eyeNorm;
 
@@ -21,9 +38,9 @@ vec3 phongModel(vec4 ep, vec3 en, vec3 ambient, vec3 diffuse, vec3 specular, vec
 }
 
 void main(){
-	vec3 color = vec3(0.6, 0.9, 0.9);
-	vec3 ambL = vec3(0.1,0.1,0.1);
-	vec3 diffL = vec3(0.7, 0.2, 0.75);
-	vec3 specL = vec3(0.7, 0.1, 0.75);
+	vec3 color = (matCol.kd + matCol.ks + matCol.ka) * 0.334;
+	vec3 ambL = lightCol.la;
+	vec3 diffL = lightCol.ld;
+	vec3 specL = lightCol.ls;
 	FragColor = vec4(phongModel(eyePosit, eyeNorm, ambL, diffL, specL, color), 1.0);
 }

@@ -24,7 +24,7 @@ namespace agl {
 
    void PLYMesh::init() {
       assert(_positions.size() != 0);
-      initBuffers(&_faces, &_positions, &_normals);
+      initBuffers(&_faces, &_positions, &_normals, &_texCoords);
    }
 
    PLYMesh::~PLYMesh() {
@@ -82,7 +82,7 @@ namespace agl {
         getline(myFile, data);
         stringstream strstr;
         strstr << data;
-        float a, b, c, d, e, f;
+        float a, b, c, d, e, f, u, v;
         strstr >> a;
         strstr >> b;
         strstr >> c;
@@ -101,6 +101,10 @@ namespace agl {
         _normals.push_back(d);
         _normals.push_back(e);
         _normals.push_back(f);
+        strstr >> u;
+        strstr >> v;
+        _texCoords.push_back(u);
+        _texCoords.push_back(v);
     }
 
     maxB = { maxx, maxy, maxz };

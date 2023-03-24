@@ -7,6 +7,23 @@ uniform mat3 NormalMatrix;
 uniform mat4 ModelViewMatrix;
 uniform mat4 MVP;
 
+struct light{
+   vec4 pos;
+   vec3 la;
+   vec3 ld;
+   vec3 ls;
+};
+
+struct material{
+   vec3 ka;
+   vec3 kd;
+   vec3 ks;
+   float shine;
+};
+
+uniform light lightCol;
+uniform material matCol;
+
 out vec3 result;
 
 vec3 phongModel(vec4 ep, vec3 en, vec3 ambient, vec3 diffuse, vec3 specular, vec3 lightCol){
@@ -29,10 +46,10 @@ void main()
 {
 	vec3 eyeNorm = normalize(NormalMatrix * vNormal);
 	vec4 eyePosit = ModelViewMatrix * vec4(vPos, 1.0);
-	vec3 color = vec3(0.6, 0.9, 0.9); 
-	vec3 ambL = vec3(0.1, 0.1, 0.1);
-	vec3 diffL = vec3(0.7, 0.2, 0.75);
-	vec3 specL = vec3(0.8, 0.8, 0.8);
+	vec3 color = (matCol.kd + matCol.ks + matCol.ka) * 0.334;
+	vec3 ambL = lightCol.la;
+	vec3 diffL = lightCol.ld;
+	vec3 specL = lightCol.ls;
     result = phongModel(eyePosit, eyeNorm, ambL, diffL, specL, color);
     gl_Position = MVP * vec4(vPos, 1.0);
 }
