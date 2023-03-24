@@ -11,8 +11,10 @@ uniform bool hasUV;
 
 out vec3 eyeNorm;
 out vec4 eyePosit;
+out vec3 vertPos;
 
 void main(){
+	vertPos = vPos;
 	eyeNorm = normalize(NormalMatrix * vNormals);
 	eyePosit = ModelViewMatrix * vec4(vPos, 1.0);
     gl_Position = MVP * vec4(vPos, 1.0);

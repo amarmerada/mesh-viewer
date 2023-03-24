@@ -27,7 +27,7 @@ const float scale = 1.0 / level;
 vec3 toon(){
    vec3 s = normalize(vec3(lightCol.pos.xyz) - eyePosit);
    float cos = max(0.0, dot(s, eyeNorm));
-   vec3 dif = ((matCol.kd + matCol.ks + matCol.ka)) * floor(cos * level) * scale;
+   vec3 dif = ((matCol.kd + matCol.ks + matCol.ka)) * ceil(cos * level) * scale;
    return lightCol.la * (matCol.ka + dif);
 }
 
