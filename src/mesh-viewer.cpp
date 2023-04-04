@@ -34,6 +34,7 @@ public:
         renderer.loadShader("toon", "../shaders/toon.vs", "../shaders/toon.fs");
         renderer.loadShader("fog", "../shaders/fog.vs", "../shaders/fog.fs");
         renderer.loadShader("texture", "../shaders/texture.vs", "../shaders/texture.fs");
+        renderer.loadShader("twoTone", "../shaders/twoTone.vs", "../shaders/twoTone.fs");
         renderer.loadTexture("bricks", "../textures/bricks.png", 0);
     }
 
@@ -126,6 +127,14 @@ public:
         renderer.setUniform("Ks", vec3(0.9, 0.85, 0.95));
         renderer.setUniform("Ka", vec3(0.35, 0.25, 0.3));
         renderer.setUniform("Shininess", 46.0f);
+
+        renderer.setUniform("iB.x", mesh.minBounds().x); 
+        renderer.setUniform("iB.y", mesh.minBounds().y);
+        renderer.setUniform("iB.z", mesh.minBounds().z);
+        renderer.setUniform("aB.x", mesh.maxBounds().x);
+        renderer.setUniform("aB.y", mesh.maxBounds().y);
+        renderer.setUniform("aB.z", mesh.maxBounds().z);
+
         
         float a = 1;
         float b = 1;
@@ -133,6 +142,9 @@ public:
         GLfloat xrange = mesh.maxBounds().x - mesh.minBounds().x;
         GLfloat yrange = mesh.maxBounds().y - mesh.minBounds().y;
         GLfloat zrange = mesh.maxBounds().z - mesh.minBounds().z;
+
+        renderer.translate(vec3(0, 0, 0)); //max + min /2 for xyz
+        //translate scale view and poistion
         if ((xrange > zrange) || (xrange > yrange)) {
             a = 5.0f / xrange;
             b = 5.0f / xrange;
@@ -149,14 +161,13 @@ public:
             c = 5.0f / yrange;
         }
         renderer.scale(vec3(a, b, c));
-        renderer.translate(vec3(0, 0, 0));
         renderer.lookAt(eyePos,lookPos, up);
         renderer.mesh(mesh);
     }
 
 protected:
     std::vector<string> files;
-    std::vector<string> shadernames = {"normals", "phong-pixel", "phong-vertex", "toon", "fog", "texture"};
+    std::vector<string> shadernames = {"normals", "phong-pixel", "phong-vertex", "toon", "fog", "texture", "twoTone"};
     int shaders = 0;
     PLYMesh mesh;
     std::vector<PLYMesh> meshList;
